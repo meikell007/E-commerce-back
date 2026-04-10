@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: ecommercexyz
+
+aws:
+  dynamodb:
+    endpoint: http://localhost:8000
+  region: us-east-1
+  accessKey: dummy
+  secretKey: dummy
