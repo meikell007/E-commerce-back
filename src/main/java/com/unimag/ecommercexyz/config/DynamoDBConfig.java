@@ -1,6 +1,8 @@
-package com.unimag.ecommercexyz.infrastructure.config;
+package com.unimag.ecommercexyz.config;
 
-import com.unimag.ecommercexyz.infrastructure.entity.AppEntity;
+import com.unimag.ecommercexyz.entity.ItemEntity;
+import com.unimag.ecommercexyz.entity.OrderEntity;
+import com.unimag.ecommercexyz.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,12 +37,12 @@ public class DynamoDBConfig {
         DynamoDbClientBuilder builder = DynamoDbClient.builder()
                 .region(Region.of(region));
 
-        // 👉 Si hay endpoint → estás en local
+        //Si hay endpoint → estás en local
         if (endpoint != null && !endpoint.isEmpty()) {
             builder.endpointOverride(URI.create(endpoint));
         }
 
-        // 👉 Credenciales (solo si están definidas)
+        //Credenciales (solo si están definidas)
         if (accessKey != null && !accessKey.isEmpty()) {
             AwsBasicCredentials credentials =
                     AwsBasicCredentials.create(accessKey, secretKey);
@@ -61,7 +63,17 @@ public class DynamoDBConfig {
     }
 
     @Bean
-    public DynamoDbTable<AppEntity> appTable(DynamoDbEnhancedClient client) {
-        return client.table("AppTable", TableSchema.fromBean(AppEntity.class));
+    public DynamoDbTable<UserEntity> userTable(DynamoDbEnhancedClient client) {
+        return client.table("AppTable", TableSchema.fromBean(UserEntity.class));
+    }
+
+    @Bean
+    public DynamoDbTable<OrderEntity> orderTable(DynamoDbEnhancedClient client) {
+        return client.table("AppTable", TableSchema.fromBean(OrderEntity.class));
+    }
+
+    @Bean
+    public DynamoDbTable<ItemEntity> itemAppTable(DynamoDbEnhancedClient client) {
+        return client.table("AppTable", TableSchema.fromBean(ItemEntity.class));
     }
 }
