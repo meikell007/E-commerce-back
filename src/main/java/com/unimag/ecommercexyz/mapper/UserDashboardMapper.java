@@ -21,7 +21,7 @@ public class UserDashboardMapper {
 
     public ProfileDTO userAndOrdersToProfileDTO(UserEntity user, List<OrderEntity> orders) {
         List<OrderDTO> orderSummariesDTO = orders.stream()
-                .map(orderEntity -> new OrderDTO(KeyUtils.extractId(orderEntity.getPk(), properties.orderPrefix()),
+                .map(orderEntity -> new OrderDTO(KeyUtils.extractId(orderEntity.getSk(), properties.orderPrefix()),
                         orderEntity.getCreationDate(), orderEntity.getStatus(), orderEntity.getShippingAddress()))
                 .toList();
 

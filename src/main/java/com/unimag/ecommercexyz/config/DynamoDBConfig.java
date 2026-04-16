@@ -71,16 +71,16 @@ public class DynamoDBConfig {
 
     @Bean
     public DynamoDbTable<UserEntity> userAccessTable(DynamoDbEnhancedClient client) {
-        return client.table("AppTable", TableSchema.fromBean(UserEntity.class));
+        return client.table("E-commerce", TableSchema.fromBean(UserEntity.class));
     }
 
     @Bean
     public DynamoDbTable<OrderEntity> orderAccessTable(DynamoDbEnhancedClient client) {
-        return client.table("AppTable", TableSchema.fromBean(OrderEntity.class));
+        return client.table("E-commerce", TableSchema.fromBean(OrderEntity.class));
     }
 
     @Bean
     public DynamoDbTable<OrderItemEntity> orderEntityAccessTable(DynamoDbEnhancedClient client) {
-        return client.table("AppTable", TableSchema.fromBean(OrderItemEntity.class));
+        return client.table("E-commerce", TableSchema.fromBean(OrderItemEntity.class));
     }
 }

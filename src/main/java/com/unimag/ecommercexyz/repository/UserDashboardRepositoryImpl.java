@@ -26,9 +26,11 @@ public class UserDashboardRepositoryImpl implements UserDashboardRepository {
 
     @Override
     public Optional<UserEntity> findUserProfile(String userId) {
+        String pk = properties.userPkPrefix() + userId;
+        System.out.println("----- esta es la pk" + pk);
         return Optional.ofNullable(userAccessTable.getItem(
                 Key.builder()
-                .partitionValue(properties.userPkPrefix() + userId)
+                .partitionValue(pk)
                 .sortValue(properties.profileSk())
                 .build()));
     }

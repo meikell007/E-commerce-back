@@ -40,21 +40,21 @@ public class DynamoDBInitializer {
                     .tableName("E-commerce")
                     .keySchema(
                             KeySchemaElement.builder()
-                                    .attributeName("PK")
+                                    .attributeName("pk")
                                     .keyType(KeyType.HASH)
                                     .build(),
                             KeySchemaElement.builder()
-                                    .attributeName("SK")
+                                    .attributeName("sk")
                                     .keyType(KeyType.RANGE)
                                     .build()
                     )
                     .attributeDefinitions(
                             AttributeDefinition.builder()
-                                    .attributeName("PK")
+                                    .attributeName("pk")
                                     .attributeType(ScalarAttributeType.S)
                                     .build(),
                             AttributeDefinition.builder()
-                                    .attributeName("SK")
+                                    .attributeName("sk")
                                     .attributeType(ScalarAttributeType.S)
                                     .build()
                     )
@@ -88,104 +88,96 @@ public class DynamoDBInitializer {
 
             System.out.println("📝 Insertando datos de ejemplo...");
 
-            // 1. USER_001 PROFILE
+            // 1. USER#001 PROFILE
             insertItem(Map.of(
-                    "PK", AttributeValue.builder().s("USER_001").build(),
-                    "SK", AttributeValue.builder().s("PROFILE").build(),
-                    "nombre", AttributeValue.builder().s("Luisa").build(),
-                    "correo", AttributeValue.builder().s("l@x.com").build(),
-                    "direcciones", AttributeValue.builder()
-                            .l(Arrays.asList(
-                                    AttributeValue.builder().s("Calle 10, Bogotá").build(),
-                                    AttributeValue.builder().s("Ave. 5, Medellín").build()
-                            ))
-                            .build(),
-                    "pagos", AttributeValue.builder()
-                            .l(Arrays.asList(
-                                    AttributeValue.builder().s("Visa ...1234").build(),
-                                    AttributeValue.builder().s("PayPal").build()
-                            ))
-                            .build()
+                    "pk", AttributeValue.builder().s("USER#001").build(),
+                    "sk", AttributeValue.builder().s("PROFILE").build(),
+                    "type", AttributeValue.builder().s("USER_PROFILE").build(),
+                    "name", AttributeValue.builder().s("Luisa").build(),
+                    "email", AttributeValue.builder().s("l@x.com").build(),
+                    "shippingAddress", AttributeValue.builder().s("Calle 10, Bogotá").build(),
+                    "paymentMethod", AttributeValue.builder().s("Visa ...1234").build()
             ));
 
-            // 2. USER_001 ORD_556
+            // 2. USER#001 ORDER#556
             insertItem(Map.of(
-                    "PK", AttributeValue.builder().s("USER_001").build(),
-                    "SK", AttributeValue.builder().s("ORD_556").build(),
-                    "estado", AttributeValue.builder().s("Pago exitoso").build(),
-                    "fechaCreacion", AttributeValue.builder().s("2023-11-15T14:30Z").build(),
-                    "direccionEnvio", AttributeValue.builder().s("Calle 10, Bogotá").build(),
-                    "total", AttributeValue.builder().n("300").build()
+                    "pk", AttributeValue.builder().s("USER#001").build(),
+                    "sk", AttributeValue.builder().s("ORDER#556").build(),
+                    "type", AttributeValue.builder().s("ORDER").build(),
+                    "status", AttributeValue.builder().s("Pago exitoso").build(),
+                    "creationDate", AttributeValue.builder().s("2023-11-15T14:30Z").build(),
+                    "shippingAddress", AttributeValue.builder().s("Calle 10, Bogotá").build()
+
             ));
 
-            // 3. USER_001 ORD_554
+            // 3. USER#001 ORDER#554
             insertItem(Map.of(
-                    "PK", AttributeValue.builder().s("USER_001").build(),
-                    "SK", AttributeValue.builder().s("ORD_554").build(),
-                    "estado", AttributeValue.builder().s("Enviado").build(),
-                    "fechaCreacion", AttributeValue.builder().s("2023-11-01T09:15Z").build(),
-                    "direccionEnvio", AttributeValue.builder().s("Calle 10, Bogotá").build(),
-                    "total", AttributeValue.builder().n("80").build()
+                    "pk", AttributeValue.builder().s("USER#001").build(),
+                    "sk", AttributeValue.builder().s("ORDER#554").build(),
+                    "type", AttributeValue.builder().s("ORDER").build(),
+                    "status", AttributeValue.builder().s("Enviado").build(),
+                    "creationDate", AttributeValue.builder().s("2023-11-01T09:15Z").build(),
+                    "shippingAddress", AttributeValue.builder().s("Calle 10, Bogotá").build()
             ));
 
-            // 4. USER_001 ORD_555
+            // 4. USER#001 ORDER#555
             insertItem(Map.of(
-                    "PK", AttributeValue.builder().s("USER_001").build(),
-                    "SK", AttributeValue.builder().s("ORD_555").build(),
-                    "estado", AttributeValue.builder().s("Pago exitoso").build(),
-                    "fechaCreacion", AttributeValue.builder().s("2023-10-27T08:00Z").build(),
-                    "direccionEnvio", AttributeValue.builder().s("Calle 10, Bogotá").build(),
-                    "total", AttributeValue.builder().n("1250").build()
+                    "pk", AttributeValue.builder().s("USER#001").build(),
+                    "sk", AttributeValue.builder().s("ORDER#555").build(),
+                    "type", AttributeValue.builder().s("ORDER").build(),
+                    "status", AttributeValue.builder().s("Pago exitoso").build(),
+                    "creationDate", AttributeValue.builder().s("2023-10-27T08:00Z").build(),
+                    "shippingAddress", AttributeValue.builder().s("Calle 10, Bogotá").build()
             ));
 
-            // 5. USER_001 ORD_553
+            // 5. USER#001 ORDER#553
             insertItem(Map.of(
-                    "PK", AttributeValue.builder().s("USER_001").build(),
-                    "SK", AttributeValue.builder().s("ORD_553").build(),
-                    "estado", AttributeValue.builder().s("Enviado").build(),
-                    "fechaCreacion", AttributeValue.builder().s("2023-10-10T11:45Z").build(),
-                    "direccionEnvio", AttributeValue.builder().s("Ave. 5, Medellín").build(),
-                    "total", AttributeValue.builder().n("150").build()
+                    "pk", AttributeValue.builder().s("USER#001").build(),
+                    "sk", AttributeValue.builder().s("ORDER#553").build(),
+                    "type", AttributeValue.builder().s("ORDER").build(),
+                    "status", AttributeValue.builder().s("Enviado").build(),
+                    "creationDate", AttributeValue.builder().s("2023-10-10T11:45Z").build(),
+                    "shippingAddress", AttributeValue.builder().s("Ave. 5, Medellín").build()
             ));
 
-            // 6. USER_001 ORD_552
+            // 6. USER#001 ORDER#552
             insertItem(Map.of(
-                    "PK", AttributeValue.builder().s("USER_001").build(),
-                    "SK", AttributeValue.builder().s("ORD_552").build(),
-                    "estado", AttributeValue.builder().s("Pago exitoso").build(),
-                    "fechaCreacion", AttributeValue.builder().s("2023-09-25T16:00Z").build(),
-                    "direccionEnvio", AttributeValue.builder().s("Ave. 5, Medellín").build(),
-                    "total", AttributeValue.builder().n("200").build()
+                    "pk", AttributeValue.builder().s("USER#001").build(),
+                    "sk", AttributeValue.builder().s("ORDER#552").build(),
+                    "type", AttributeValue.builder().s("ORDER").build(),
+                    "status", AttributeValue.builder().s("Pago exitoso").build(),
+                    "creationDate", AttributeValue.builder().s("2023-09-25T16:00Z").build(),
+                    "shippingAddress", AttributeValue.builder().s("Ave. 5, Medellín").build()
             ));
 
-            // 7. ORD_555 DETAILS
+            // 7. ORDER#555 DETAILS
             insertItem(Map.of(
-                    "PK", AttributeValue.builder().s("ORD_555").build(),
-                    "SK", AttributeValue.builder().s("DETAILS").build(),
-                    "estado", AttributeValue.builder().s("Pago exitoso").build(),
-                    "fechaCreacion", AttributeValue.builder().s("2023-10-27T08:00Z").build(),
-                    "direccionEnvio", AttributeValue.builder().s("Calle 10, Bogotá").build(),
-                    "total", AttributeValue.builder().n("1250").build()
+                    "pk", AttributeValue.builder().s("ORDER#555").build(),
+                    "sk", AttributeValue.builder().s("DETAILS").build(),
+                    "type", AttributeValue.builder().s("ORDER_DETAILS").build(),
+                    "status", AttributeValue.builder().s("Pago exitoso").build(),
+                    "creationDate", AttributeValue.builder().s("2023-10-27T08:00Z").build(),
+                    "shippingAddress", AttributeValue.builder().s("Calle 10, Bogotá").build()
             ));
 
-            // 8. ORD_555 ITEM_001
+            // 8. ORDER#555 ITEM#001
             insertItem(Map.of(
-                    "PK", AttributeValue.builder().s("ORD_555").build(),
-                    "SK", AttributeValue.builder().s("ITEM_001").build(),
-                    "producto", AttributeValue.builder().s("Laptop XPS").build(),
-                    "cantidad", AttributeValue.builder().n("1").build(),
-                    "precioUnitarioCompra", AttributeValue.builder().n("1200").build(),
-                    "subtotal", AttributeValue.builder().n("1200").build()
+                    "pk", AttributeValue.builder().s("ORDER#555").build(),
+                    "sk", AttributeValue.builder().s("ITEM#001").build(),
+                    "type", AttributeValue.builder().s("ITEM").build(),
+                    "name", AttributeValue.builder().s("Laptop XPS").build(),
+                    "quantityRequested", AttributeValue.builder().n("1").build(),
+                    "price", AttributeValue.builder().n("1200").build()
             ));
 
-            // 9. ORD_555 ITEM_002
+            // 9. ORDER#555 ITEM#002
             insertItem(Map.of(
-                    "PK", AttributeValue.builder().s("ORD_555").build(),
-                    "SK", AttributeValue.builder().s("ITEM_002").build(),
-                    "producto", AttributeValue.builder().s("Libro: El Capital").build(),
-                    "cantidad", AttributeValue.builder().n("2").build(),
-                    "precioUnitarioCompra", AttributeValue.builder().n("25").build(),
-                    "subtotal", AttributeValue.builder().n("50").build()
+                    "pk", AttributeValue.builder().s("ORDER#555").build(),
+                    "sk", AttributeValue.builder().s("ITEM#002").build(),
+                    "type", AttributeValue.builder().s("ITEM").build(),
+                    "name", AttributeValue.builder().s("Libro: El Capital").build(),
+                    "quantityRequested", AttributeValue.builder().n("2").build(),
+                    "price", AttributeValue.builder().n("25").build()
             ));
 
             System.out.println("✓ 9 registros insertados correctamente");
