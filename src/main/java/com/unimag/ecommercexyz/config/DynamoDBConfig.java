@@ -1,6 +1,6 @@
 package com.unimag.ecommercexyz.config;
 
-import com.unimag.ecommercexyz.entity.ItemEntity;
+import com.unimag.ecommercexyz.entity.OrderItemEntity;
 import com.unimag.ecommercexyz.entity.OrderEntity;
 import com.unimag.ecommercexyz.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,17 +63,17 @@ public class DynamoDBConfig {
     }
 
     @Bean
-    public DynamoDbTable<UserEntity> userTable(DynamoDbEnhancedClient client) {
+    public DynamoDbTable<UserEntity> userAccessTable(DynamoDbEnhancedClient client) {
         return client.table("AppTable", TableSchema.fromBean(UserEntity.class));
     }
 
     @Bean
-    public DynamoDbTable<OrderEntity> orderTable(DynamoDbEnhancedClient client) {
+    public DynamoDbTable<OrderEntity> orderAccessTable(DynamoDbEnhancedClient client) {
         return client.table("AppTable", TableSchema.fromBean(OrderEntity.class));
     }
 
     @Bean
-    public DynamoDbTable<ItemEntity> itemAppTable(DynamoDbEnhancedClient client) {
-        return client.table("AppTable", TableSchema.fromBean(ItemEntity.class));
+    public DynamoDbTable<OrderItemEntity> orderEntityAccessTable(DynamoDbEnhancedClient client) {
+        return client.table("AppTable", TableSchema.fromBean(OrderItemEntity.class));
     }
 }

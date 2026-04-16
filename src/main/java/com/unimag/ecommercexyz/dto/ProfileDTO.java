@@ -9,5 +9,5 @@ public record ProfileDTO (
         String email,
         String shippingAddresses,
         String paymentMethods,
-        List<OrderSummaryDTO> recentOrders
+        List<OrderDTO> recentOrders
 ) {}

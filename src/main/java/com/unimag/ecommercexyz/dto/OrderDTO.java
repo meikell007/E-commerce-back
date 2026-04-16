@@ -1,6 +1,6 @@
 package com.unimag.ecommercexyz.dto;
 
-public record OrderSummaryDTO (
+public record OrderDTO(
         String id,
         String creationDate,
         String status,
