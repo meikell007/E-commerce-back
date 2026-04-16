@@ -1,0 +1,77 @@
+# ============================================================
+# docker-compose.yml — E-commerce Back + DynamoDB Local
+# ============================================================
+# Uso:
+#   docker compose up --build          → levantar todo
+#   docker compose up --build backend  → solo rebuild del backend
+#   docker compose down -v             → bajar y borrar volúmenes
+# ============================================================
+
+services:
+
+  # ----------------------------------------------------------
+  # DynamoDB Local (imagen oficial de Amazon)
+  # ----------------------------------------------------------
+  dynamodb-local:
+    image: amazon/dynamodb-local:latest
+    container_name: dynamodb-local
+    command: ["-jar", "DynamoDBLocal.jar", "-sharedDb", "-dbPath", "/data"]
+    ports:
+      - "8000:8000"
+    volumes:
+      # Volumen persistente
+      - dynamodb-data:/data
+    networks:
+      - ecommerce-net
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8000 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ----------------------------------------------------------
+  # Backend Spring Boot
+  # ----------------------------------------------------------
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ecommerce-backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      dynamodb-local:
+        condition: service_healthy
+    environment:
+      # ── DynamoDB Local ──────────────────────────────────────
+      AWS_DYNAMODB_ENDPOINT: http://dynamodb-local:8000
+      AWS_REGION: us-east-1
+
+      # Para DynamoDB Local las credenciales pueden ser cualquier string
+      AWS_ACCESS_KEY_ID: local
+      AWS_SECRET_ACCESS_KEY: local
+
+      # ── Spring ──────────────────────────────────────────────
+      SPRING_PROFILES_ACTIVE: docker
+
+      # ── Opcional: JWT secret y otros ────────────────────────
+      # JWT_SECRET: cambia_esto_en_produccion
+
+    networks:
+      - ecommerce-net
+    restart: unless-stopped
+
+# ----------------------------------------------------------
+# Volúmenes
+# ----------------------------------------------------------
+volumes:
+  dynamodb-data:
+    name: ecommerce-dynamodb-data   # nombre explícito para identificarlo fácil
+
+# ----------------------------------------------------------
+# Redes
+# ----------------------------------------------------------
+networks:
+  ecommerce-net:
+    driver: bridge
