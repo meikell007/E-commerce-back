@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: ecommercexyz
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 6000
+
+ecommerce:
+  db:
+    user-pk-prefix: "USER#"
+    profile-sk: "PROFILE"
+    order-prefix: "ORDER#"
+    item-type: "ITEM"
+    order-details-sk: "DETAILS"
+
+  service:
+    history-order-limit: 10
+
+infrastructure:
+  aws:
+    dynamodb:
+      endpoint: http://localhost:8000
+    region: us-east-1
+    accessKey: dummy
+    secretKey: dummy

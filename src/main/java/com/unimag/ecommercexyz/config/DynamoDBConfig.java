@@ -19,10 +19,11 @@ import java.net.URI;
 
 @Configuration
 public class DynamoDBConfig {
+
     @Value("${aws.dynamodb.endpoint:}")
     private String endpoint;
 
-    @Value("${aws.region}")
+    @Value("${aws.region:us-east-1}")
     private String region;
 
     @Value("${aws.accessKey:}")
@@ -34,12 +35,18 @@ public class DynamoDBConfig {
     @Bean
     public DynamoDbClient dynamoDbClient() {
 
+        System.out.println("🔧 Configurando DynamoDB");
+        System.out.println("   Endpoint: " + endpoint);
+        System  .out.println("   Region: " + region);
+
         DynamoDbClientBuilder builder = DynamoDbClient.builder()
                 .region(Region.of(region));
 
         //Si hay endpoint → estás en local
         if (endpoint != null && !endpoint.isEmpty()) {
             builder.endpointOverride(URI.create(endpoint));
+            System.out.println("   ✓ Usando endpoint local: " + endpoint);
+
         }
 
         //Credenciales (solo si están definidas)
@@ -64,16 +71,16 @@ public class DynamoDBConfig {
 
     @Bean
     public DynamoDbTable<UserEntity> userAccessTable(DynamoDbEnhancedClient client) {
-        return client.table("AppTable", TableSchema.fromBean(UserEntity.class));
+        return client.table("E-commerce", TableSchema.fromBean(UserEntity.class));
     }
 
     @Bean
     public DynamoDbTable<OrderEntity> orderAccessTable(DynamoDbEnhancedClient client) {
-        return client.table("AppTable", TableSchema.fromBean(OrderEntity.class));
+        return client.table("E-commerce", TableSchema.fromBean(OrderEntity.class));
     }
 
     @Bean
     public DynamoDbTable<OrderItemEntity> orderEntityAccessTable(DynamoDbEnhancedClient client) {
-        return client.table("AppTable", TableSchema.fromBean(OrderItemEntity.class));
+        return client.table("E-commerce", TableSchema.fromBean(OrderItemEntity.class));
     }
 }

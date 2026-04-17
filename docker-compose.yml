@@ -1,0 +1,83 @@
+# ============================================================
+# docker-compose.yml — E-commerce Back + DynamoDB Local
+# ============================================================
+
+services:
+
+  # ----------------------------------------------------------
+  # DynamoDB Local (imagen oficial de Amazon)
+  # ----------------------------------------------------------
+  dynamodb-local:
+    image: amazon/dynamodb-local:latest
+    container_name: dynamodb-local
+    command: ["-jar", "DynamoDBLocal.jar", "-sharedDb", "-inMemory"]
+    ports:
+      - "8000:8000"
+    networks:
+      - ecommerce-net
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8000 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ----------------------------------------------------------
+  # Backend Spring Boot
+  # ----------------------------------------------------------
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ecommerce-backend
+    ports:
+      - "8080:8080"
+    depends_on:
+     - dynamodb-local
+        #condition: service_healthy
+    environment:
+      # ── DynamoDB Local ──────────────────────────────────────
+      AWS_DYNAMODB_ENDPOINT: http://dynamodb-local:8000
+      AWS_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: local
+      AWS_SECRET_ACCESS_KEY: local
+
+      # ── Redis ──────────────────────────────────────────────
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+
+    networks:
+      - ecommerce-net
+    restart: unless-stopped
+
+  # ----------------------------------------------------------
+  # Redis
+  # ----------------------------------------------------------
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: ["redis-server", "--save", "\"\"", "--appendonly", "no"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    networks:
+      - ecommerce-net
+
+# ----------------------------------------------------------
+# Volúmenes
+# ----------------------------------------------------------
+volumes:
+  redis_data:
+
+# ----------------------------------------------------------
+# Redes
+# ----------------------------------------------------------
+networks:
+  ecommerce-net:
+    driver: bridge
