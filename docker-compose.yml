@@ -31,7 +31,7 @@ services:
       dockerfile: Dockerfile
     container_name: ecommerce-backend
     ports:
-      - "8080:8080"
+      - "8087:8080"
     depends_on:
      - dynamodb-local
         #condition: service_healthy

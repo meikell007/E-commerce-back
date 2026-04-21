@@ -4,8 +4,8 @@ spring:
 
   data:
     redis:
-      host: localhost
-      port: 6379
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
       timeout: 6000
 
 ecommerce:
@@ -19,10 +19,17 @@ ecommerce:
   service:
     history-order-limit: 10
 
-infrastructure:
-  aws:
-    dynamodb:
-      endpoint: http://localhost:8000
-    region: us-east-1
-    accessKey: dummy
-    secretKey: dummy
+aws:
+  dynamodb:
+    endpoint: ${AWS_DYNAMODB_ENDPOINT:http://localhost:8000}
+  region: ${AWS_REGION:us-east-1}
+  accessKey: ${AWS_ACCESS_KEY_ID:dummy}
+  secretKey: ${AWS_SECRET_ACCESS_KEY:dummy}
+
+server:
+  port: 8080
+
+logging:
+  level:
+    software.amazon.awssdk: WARN
+    com.unimag: DEBUG
