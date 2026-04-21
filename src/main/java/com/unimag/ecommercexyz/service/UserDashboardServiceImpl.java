@@ -10,6 +10,7 @@ import com.unimag.ecommercexyz.mapper.UserDashboardMapper;
 import com.unimag.ecommercexyz.properties.ServiceProperties;
 import com.unimag.ecommercexyz.repository.UserDashboardRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,6 +31,7 @@ public class UserDashboardServiceImpl implements UserDashboardService {
         return userDashboardMapper.userAndOrdersToProfileDTO(user, orders);
     }
 
+    @Cacheable(value = "orders", key = "#orderId")
     @Override
     public OrderDetailsDTO findOrderWithItems(String orderId) {
         OrderItemsAggregate orderWithItems = repository.findOrderDetails(orderId);
