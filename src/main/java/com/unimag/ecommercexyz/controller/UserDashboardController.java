@@ -19,11 +19,13 @@ public class UserDashboardController {
 
     @GetMapping("/users/{userId}/dashboard")
     public ResponseEntity<ProfileDTO> getUserDashboard(@PathVariable String userId) {
+        System.out.println("Iniciando getUserDashboard");
         return ResponseEntity.ok(service.findProfileAndOrderHistory(userId));
     }
 
     @GetMapping("/orders/{orderId}")
     public ResponseEntity<OrderDetailsDTO> getOrderDetails(@PathVariable String orderId) {
+        System.out.println("Iniciando getOrderDetails");
         return ResponseEntity.ok(service.findOrderWithItems(orderId));
     }
 }

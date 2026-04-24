@@ -35,6 +35,7 @@ public class UserDashboardServiceImpl implements UserDashboardService {
         return userDashboardMapper.userAndOrdersToProfileDTO(user, orders);
     }
 
+    //Acá se implementa redis
     @Cacheable(value = "orders", key = "#orderId")
     @Override
     public OrderDetailsDTO findOrderWithItems(String orderId) {
