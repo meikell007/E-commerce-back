@@ -1,26 +1,36 @@
 # ============================================================
-# docker-compose.yml — E-commerce Back + DynamoDB Local
+# docker-compose.yml — E-commerce Back + LocalStack
 # ============================================================
 
 services:
 
   # ----------------------------------------------------------
-  # DynamoDB Local (imagen oficial de Amazon)
+  # LocalStack (DynamoDB + Redis en un contenedor)
   # ----------------------------------------------------------
-  dynamodb-local:
-    image: amazon/dynamodb-local:latest
-    container_name: dynamodb-local
-    command: ["-jar", "DynamoDBLocal.jar", "-sharedDb", "-inMemory"]
+  ministack:
+    image: ministackorg/ministack
+    container_name: ministack
     ports:
-      - "8000:8000"
-    networks:
-      - ecommerce-net
+      - "4566:4566"   # Puerto principal de LocalStack
+      - "6379:6379"      # Puerto Redis
+    environment:
+      - SERVICES=dynamodb,redis
+      - DEBUG=1
+      - DATA_DIR=/tmp/ministack/data
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=local
+      - AWS_SECRET_ACCESS_KEY=local
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
     healthcheck:
-      test: ["CMD-SHELL", "curl -sf http://localhost:8000 || exit 1"]
+      test: ["CMD", "awslocal", "dynamodb", "list-tables"]
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 10s
+      start_period: 15s
+    networks:
+      - ecommerce-net
 
   # ----------------------------------------------------------
   # Backend Spring Boot
@@ -33,47 +43,22 @@ services:
     ports:
       - "8087:8080"
     depends_on:
-     - dynamodb-local
-        #condition: service_healthy
+      ministack:
+        condition: service_healthy
     environment:
       # ── DynamoDB Local ──────────────────────────────────────
-      AWS_DYNAMODB_ENDPOINT: http://dynamodb-local:8000
+      AWS_DYNAMODB_ENDPOINT: http://ministack:4566
       AWS_REGION: us-east-1
       AWS_ACCESS_KEY_ID: local
       AWS_SECRET_ACCESS_KEY: local
 
       # ── Redis ──────────────────────────────────────────────
-      REDIS_HOST: redis
+      REDIS_HOST: ministack
       REDIS_PORT: 6379
 
     networks:
       - ecommerce-net
     restart: unless-stopped
-
-  # ----------------------------------------------------------
-  # Redis
-  # ----------------------------------------------------------
-  redis:
-    image: redis:latest
-    container_name: redis
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    command: ["redis-server", "--save", "\"\"", "--appendonly", "no"]
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 10s
-      retries: 5
-    networks:
-      - ecommerce-net
-
-# ----------------------------------------------------------
-# Volúmenes
-# ----------------------------------------------------------
-volumes:
-  redis_data:
 
 # ----------------------------------------------------------
 # Redes
@@ -81,4 +66,3 @@ volumes:
 networks:
   ecommerce-net:
     driver: bridge
-

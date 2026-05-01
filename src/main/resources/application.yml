@@ -21,7 +21,7 @@ ecommerce:
 
 aws:
   dynamodb:
-    endpoint: ${AWS_DYNAMODB_ENDPOINT:http://localhost:8000}
+  endpoint: ${AWS_DYNAMODB_ENDPOINT:http://localhost:4566}  # ✅ Cambio: 4566 en lugar de 8000
   region: ${AWS_REGION:us-east-1}
   accessKey: ${AWS_ACCESS_KEY_ID:dummy}
   secretKey: ${AWS_SECRET_ACCESS_KEY:dummy}
